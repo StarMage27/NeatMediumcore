@@ -1,0 +1,3 @@
+displayName = Neat Mediumcore
+author = StarMage27
+version = 0.9

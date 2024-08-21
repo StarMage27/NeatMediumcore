@@ -1,0 +1,17 @@
+Configs: {
+	NMConfig: {
+		DisplayName: N M Config
+
+		ShowButtonsToggle: {
+			Label: Show Buttons Toggle
+			Tooltip: ""
+		}
+
+		ItemsGlowToggle: {
+			Label: Items Glow Toggle
+			Tooltip: ""
+		}
+	}
+}
+
+"Keybinds.Pick up other players items toggle.DisplayName": Pick up other players items toggle
