@@ -1,5 +1,5 @@
 Ever played mediumcore? No? Well, you might give this niche gamemode a try!
-If you ever die, don't worry. With this mod, when you go to the place of your death and pick up your items, they all will return to their original place in you inventory.
+If you ever die, don't worry. With this mod, when you go to the place of your death and pick up your items, they all will return to their original place in your inventory.
 It also works in multiplayer! This mod even adds an button/hotkey to toggle the ability to pick up another players items, in case you all die in one place.
 There is also an option to make your dropped items glow.
 

@@ -54,7 +54,7 @@ namespace NeatMediumcore.UI
                 layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer("MyMod: MyInterface", drawMethod, InterfaceScaleType.UI));
             }
             
-            if (showButtonsToggle && Main.playerInventory == true && Main.netMode == NetmodeID.MultiplayerClient)
+            if (showButtonsToggle && Main.playerInventory == true && Main.netMode == NetmodeID.MultiplayerClient && Main.LocalPlayer.chest == -1 && Main.LocalPlayer.TalkNPC == null)
             {
                 ShowMyUI();
             }
