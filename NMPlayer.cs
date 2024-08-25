@@ -27,13 +27,15 @@ namespace NeatMediumcore
             for (int i = 0; i < inventory.Length; i++)
             {
                 Item item = inventory[i];
-                if (item == Main.LocalPlayer.HeldItem) { continue; }
+                if (item == Main.LocalPlayer.inventory[58]) { continue; }
                 if (item != null && !item.IsAir)
                 {
                     NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
                     nMItem.slotID = i;
                     nMItem.inventoryType = type;
                     nMItem.nMFavourited = item.favorited;
+                    nMItem.ownerID = Player.whoAmI;
+                    nMItem.latestDeathCount = CountDeaths(Player);
                 }
             }
         }
@@ -68,53 +70,53 @@ namespace NeatMediumcore
                 }
                 case InventoryType.Armor:
                 {
-                    return nonFavoritePickup(ref Player.armor, ref item);
-                    //return nMOnPickup(ref Player.armor, ref item);
+                    //return nonFavoritePickup(ref Player.armor, ref item);
+                    return nMOnPickup(ref Player.armor, ref item);
                 }
                 case InventoryType.MiscEquips:
                 {
-                    return nonFavoritePickup(ref Player.miscEquips, ref item);
-                    //return nMOnPickup(ref Player.miscEquips, ref item);
+                    //return nonFavoritePickup(ref Player.miscEquips, ref item);
+                    return nMOnPickup(ref Player.miscEquips, ref item);
                 }
                 case InventoryType.Dye:
                 {
-                    return nonFavoritePickup(ref Player.dye, ref item);
-                    //return nMOnPickup(ref Player.dye, ref item);
+                    //return nonFavoritePickup(ref Player.dye, ref item);
+                    return nMOnPickup(ref Player.dye, ref item);
                 }
                 case InventoryType.MiscDyes:
                 {
-                    return nonFavoritePickup(ref Player.miscDyes, ref item);
-                    //return nMOnPickup(ref Player.miscDyes, ref item);
+                    //return nonFavoritePickup(ref Player.miscDyes, ref item);
+                    return nMOnPickup(ref Player.miscDyes, ref item);
                 }
                 case InventoryType.Loadout0Armor:
                 {
-                    return nonFavoritePickup(ref Player.Loadouts[0].Armor, ref item);
-                    //return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
+                    //return nonFavoritePickup(ref Player.Loadouts[0].Armor, ref item);
+                    return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
                 }
                 case InventoryType.Loadout0Dye:
                 {
-                    return nonFavoritePickup(ref Player.Loadouts[0].Dye, ref item);
-                    //return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
+                    //return nonFavoritePickup(ref Player.Loadouts[0].Dye, ref item);
+                    return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
                 }
                 case InventoryType.Loadout1Armor:
                 {
-                    return nonFavoritePickup(ref Player.Loadouts[1].Armor, ref item);
-                    //return nMOnPickup(ref Player.Loadouts[1].Armor, ref item);
+                    //return nonFavoritePickup(ref Player.Loadouts[1].Armor, ref item);
+                    return nMOnPickup(ref Player.Loadouts[1].Armor, ref item);
                 }
                 case InventoryType.Loadout1Dye:
                 {
-                    return nonFavoritePickup(ref Player.Loadouts[1].Dye, ref item);
-                    //return nMOnPickup(ref Player.Loadouts[1].Dye, ref item);
+                    //return nonFavoritePickup(ref Player.Loadouts[1].Dye, ref item);
+                    return nMOnPickup(ref Player.Loadouts[1].Dye, ref item);
                 }
                 case InventoryType.Loadout2Armor:
                 {
-                    return nonFavoritePickup(ref Player.Loadouts[2].Armor, ref item);
-                    //return nMOnPickup(ref Player.Loadouts[2].Armor, ref item);
+                    //return nonFavoritePickup(ref Player.Loadouts[2].Armor, ref item);
+                    return nMOnPickup(ref Player.Loadouts[2].Armor, ref item);
                 }
                 case InventoryType.Loadout2Dye:
                 {
-                    return nonFavoritePickup(ref Player.Loadouts[2].Dye, ref item);
-                    //return nMOnPickup(ref Player.Loadouts[2].Dye, ref item);
+                    //return nonFavoritePickup(ref Player.Loadouts[2].Dye, ref item);
+                    return nMOnPickup(ref Player.Loadouts[2].Dye, ref item);
                 }
                 default:
                 {
@@ -263,30 +265,6 @@ namespace NeatMediumcore
         }
 
         #region Network Sync
-
-        // public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
-        // {
-        //     Mod.SendPacket(new PartySyncPacket((byte)i, Party[i]), toWho, fromWho);
-        // }
-
-        // public override void CopyClientState(ModPlayer targetCopy)
-        // {
-        //     var clone = (NMPlayer)targetCopy;
-        //     clone.canPickUpAnotherPlayersItems = canPickUpAnotherPlayersItems;
-        // }
-
-        // public override void SendClientChanges(ModPlayer clientPlayer)
-        // {
-        //     var clone = (NMPlayer)clientPlayer;
-        //     var changed = false;
-        //     if (canPickUpAnotherPlayersItems == clone.canPickUpAnotherPlayersItems)
-        //     {
-        //         changed = true;
-        //     }
-
-        //     if (!changed) return;
-        //     SyncPlayer(toWho: -1, fromWho: Main.myPlayer, newPlayer: false);
-        // }
 
         public override void SyncPlayer(int toWho, int fromWho, bool newPlayer) {
 			ModPacket packet = Mod.GetPacket();

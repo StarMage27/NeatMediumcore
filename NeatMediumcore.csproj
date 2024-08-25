@@ -10,7 +10,18 @@
 
 	<!-- References -->
 	<ItemGroup>
-		
-	</ItemGroup>
+     <Reference Include="MoreAccessories">
+       <HintPath>../../ModReader/MoreAccessories/MoreAccessories.dll</HintPath>
+     </Reference>
+	 <Reference Include="PotionSlots">
+       <HintPath>../../ModReader/PotionSlots/PotionSlots.dll</HintPath>
+     </Reference>
+	 <Reference Include="ShoeSlot">
+       <HintPath>../../ModReader/ShoeSlot/ShoeSlot.dll</HintPath>
+     </Reference>
+	 <Reference Include="WingSlotExtra">
+       <HintPath>../../ModReader/WingSlotExtra/WingSlotExtra.dll</HintPath>
+     </Reference>
+    </ItemGroup>
 
 </Project>

@@ -11,6 +11,11 @@ Configs: {
 			Label: Items Glow Toggle
 			Tooltip: ""
 		}
+
+		ShowDebugInfoToggle: {
+			Label: Show Debug Info Toggle
+			Tooltip: ""
+		}
 	}
 }
 
