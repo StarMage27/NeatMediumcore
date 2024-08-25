@@ -11,7 +11,7 @@ Q: Does this mod work with non-equippable items as well?
 A: Yes.
 
 Q: What happens if you have new items in the slots your old items were in?
-A: Old items are moved to another slot or dropped into the world (But if they are favorited and old items aren't, they stay).
+A: New items are moved to another slot or dropped into the world (But if they are favorited and old items aren't, they stay).
 
 Q: Does this mod keep track of the items when you die multiple times?
 A: Yes. Old items take priority over new ones.
