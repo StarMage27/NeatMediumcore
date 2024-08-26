@@ -16,6 +16,12 @@ A: New items are moved to another slot or dropped into the world (But if they ar
 Q: Does this mod keep track of the items when you die multiple times?
 A: Yes. Old items take priority over new ones.
 
+Q: Does this mod work with items from other mods?
+A: Yes.
+
+Q: 1.4.3?
+A: No.
+
 
 Sometimes hotkeys may not be assigned and you will have to assign them manually.
 If you encounter any bugs, like losing all your items or a duplication scheme, report them in the Steam page or GitHub page of this mod.

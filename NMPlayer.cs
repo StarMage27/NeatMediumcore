@@ -18,24 +18,43 @@ namespace NeatMediumcore
         {
             if (Main.LocalPlayer.difficulty.Equals(PlayerDifficultyID.MediumCore))
             {
-                if (NMBind.JustPressed) { Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems = !Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems; }
+                if (NMBind.JustPressed)
+                {
+                    Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems = !Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems;
+                }
             }
         }
 
-        private void UpdateSelectInventory(ref Item[] inventory, InventoryType type)
+        #region Logic
+
+        private void UpdateSelectInventory(ref Item[] inventory, InventoryType inventoryType)
         {
-            for (int i = 0; i < inventory.Length; i++)
+            for (int slotID = 0; slotID < inventory.Length; slotID++)
             {
-                Item item = inventory[i];
-                if (item == Main.LocalPlayer.inventory[58]) { continue; }
+                Item item = inventory[slotID];
+                
                 if (item != null && !item.IsAir)
                 {
                     NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
-                    nMItem.slotID = i;
-                    nMItem.inventoryType = type;
-                    nMItem.nMFavourited = item.favorited;
+
+                    if (nMItem.latestDeathCount == -1 || (nMItem.inventoryType != inventoryType))
+                    {
+                        nMItem.latestDeathCount = CountDeaths(Player);
+                    }
+
+                    if (inventoryType == InventoryType.Inventory && item == Main.LocalPlayer.inventory[58]) // for the item in the mouse slot
+                    {
+                        nMItem.slotID = -1;
+                        nMItem.nMFavourited = false;
+                    }
+                    else
+                    {
+                        nMItem.slotID = slotID;
+                        nMItem.nMFavourited = item.favorited;
+                    }
+
+                    nMItem.inventoryType = inventoryType;
                     nMItem.ownerID = Player.whoAmI;
-                    nMItem.latestDeathCount = CountDeaths(Player);
                 }
             }
         }
@@ -57,9 +76,7 @@ namespace NeatMediumcore
             item.newAndShiny = false;
 
             nMItem.ownerID = Player.whoAmI;
-            //int slotID = nMItem.slotID;
             InventoryType inventoryType = nMItem.inventoryType;
-            //bool nMFavourited = nMItem.nMFavourited;
             item.favorited = nMItem.nMFavourited;
 
             switch(inventoryType)
@@ -70,52 +87,42 @@ namespace NeatMediumcore
                 }
                 case InventoryType.Armor:
                 {
-                    //return nonFavoritePickup(ref Player.armor, ref item);
                     return nMOnPickup(ref Player.armor, ref item);
                 }
                 case InventoryType.MiscEquips:
                 {
-                    //return nonFavoritePickup(ref Player.miscEquips, ref item);
                     return nMOnPickup(ref Player.miscEquips, ref item);
                 }
                 case InventoryType.Dye:
                 {
-                    //return nonFavoritePickup(ref Player.dye, ref item);
                     return nMOnPickup(ref Player.dye, ref item);
                 }
                 case InventoryType.MiscDyes:
                 {
-                    //return nonFavoritePickup(ref Player.miscDyes, ref item);
                     return nMOnPickup(ref Player.miscDyes, ref item);
                 }
                 case InventoryType.Loadout0Armor:
                 {
-                    //return nonFavoritePickup(ref Player.Loadouts[0].Armor, ref item);
                     return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
                 }
                 case InventoryType.Loadout0Dye:
                 {
-                    //return nonFavoritePickup(ref Player.Loadouts[0].Dye, ref item);
                     return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
                 }
                 case InventoryType.Loadout1Armor:
                 {
-                    //return nonFavoritePickup(ref Player.Loadouts[1].Armor, ref item);
                     return nMOnPickup(ref Player.Loadouts[1].Armor, ref item);
                 }
                 case InventoryType.Loadout1Dye:
                 {
-                    //return nonFavoritePickup(ref Player.Loadouts[1].Dye, ref item);
                     return nMOnPickup(ref Player.Loadouts[1].Dye, ref item);
                 }
                 case InventoryType.Loadout2Armor:
                 {
-                    //return nonFavoritePickup(ref Player.Loadouts[2].Armor, ref item);
                     return nMOnPickup(ref Player.Loadouts[2].Armor, ref item);
                 }
                 case InventoryType.Loadout2Dye:
                 {
-                    //return nonFavoritePickup(ref Player.Loadouts[2].Dye, ref item);
                     return nMOnPickup(ref Player.Loadouts[2].Dye, ref item);
                 }
                 default:
@@ -191,45 +198,6 @@ namespace NeatMediumcore
             }
         }
 
-        private bool nonFavoritePickup(ref Item[] inventory, ref Item item)
-        {
-            NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
-            int slotID = nMItem.slotID;
-            Item inventoryItem = inventory[slotID];
-
-            if(inventoryItem == null || inventoryItem.IsAir)
-            {
-                inventory[slotID] = item;
-                SoundEngine.PlaySound(SoundID.Grab, Player.position);
-                PopupText.NewText(PopupTextContext.RegularItemPickup, item, item.stack);
-                return false;
-            }
-
-            NMGlobalItem inventoryNMItem = inventoryItem.GetGlobalItem<NMGlobalItem>();
-
-            if(nMItem.latestDeathCount != -1)
-            {
-                Player.QuickSpawnItem(Player.GetSource_FromThis(), inventoryItem, inventoryItem.stack);
-                inventory[slotID].TurnToAir();
-                inventory[slotID] = item;
-                
-                if (item.IsACoin)
-                {
-                    SoundEngine.PlaySound(SoundID.CoinPickup, Player.position);
-                }
-                else
-                {
-                    SoundEngine.PlaySound(SoundID.Grab, Player.position);
-                }
-                PopupText.NewText(PopupTextContext.RegularItemPickup, item, item.stack);
-                return false;
-            }
-            else
-            {
-                return base.OnPickup(item);
-            }
-        }
-
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genDust, ref PlayerDeathReason damageSource)
         {
             if (!Main.LocalPlayer.difficulty.Equals(PlayerDifficultyID.MediumCore))
@@ -252,6 +220,10 @@ namespace NeatMediumcore
             return base.PreKill(damage, hitDirection, pvp, ref playSound, ref genDust, ref damageSource);
         }
 
+        #endregion
+
+        #region Save Data
+
         public override void SaveData(TagCompound tag)
         {
             tag.Add("NMCcanPickUpAnotherPlayersItems", canPickUpAnotherPlayersItems);
@@ -264,6 +236,8 @@ namespace NeatMediumcore
             base.LoadData(tag);
         }
 
+        #endregion
+
         #region Network Sync
 
         public override void SyncPlayer(int toWho, int fromWho, bool newPlayer) {
@@ -273,7 +247,6 @@ namespace NeatMediumcore
 			packet.Send(toWho, fromWho);
 		}
 
-		// Called in ExampleMod.Networking.cs
 		public void ReceivePlayerSync(BinaryReader reader) {
 			canPickUpAnotherPlayersItems = reader.ReadBoolean();
 		}

@@ -88,17 +88,12 @@ namespace NeatMediumcore
             base.PostUpdate(item);
         }
 
-
-
         public override void OnSpawn(Item item, IEntitySource source)
         {
             NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
 
             if(source is EntitySource_Death parent && parent.Entity is Player player)
-            {
-                //nMItem.ownerID = player.whoAmI;
-                //nMItem.latestDeathCount = CountDeaths(player);
-                
+            {                
                 base.OnSpawn(item, source);
             }
             else
@@ -124,34 +119,6 @@ namespace NeatMediumcore
             {
                 return false;
             }
-        }
-
-        
-
-        public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
-        {
-            if(ModContent.GetInstance<NMConfig>().ShowDebugInfoToggle)
-            {
-                NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
-                tooltips.Add(new TooltipLine(Mod, "Tooltip100", $"[c/FF8888:Inventory Type:] {nMItem.inventoryType}"));
-                tooltips.Add(new TooltipLine(Mod, "Tooltip101", $"[c/FF8888:Slot ID:] {nMItem.slotID}"));
-                tooltips.Add(new TooltipLine(Mod, "Tooltip102", $"[c/FF8888:Owner ID:] {nMItem.ownerID}"));
-                tooltips.Add(new TooltipLine(Mod, "Tooltip103", $"[c/FF8888:Latest Death Count:] {nMItem.latestDeathCount}"));
-                tooltips.Add(new TooltipLine(Mod, "Tooltip104", $"[c/FF8888:Favourited:] {nMItem.nMFavourited}"));
-            }
-            base.ModifyTooltips(item, tooltips);
-        }
-
-        public override void PostDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
-        {
-            if(ModContent.GetInstance<NMConfig>().ShowDebugInfoToggle)
-            {
-                var position = item.Center - Main.screenPosition;
-                NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
-                string text = $"Inventory: {nMItem.inventoryType}\nSlot: {nMItem.slotID}\nOwner: {nMItem.ownerID}\nLatest Death: {nMItem.latestDeathCount}\nFavourited: {nMItem.nMFavourited}";
-                Utils.DrawBorderString(spriteBatch, text, position, Color.White);
-            }
-            base.PostDrawInWorld(item, spriteBatch, lightColor, alphaColor, rotation, scale, whoAmI);
         }
 
         public override bool CanStackInWorld(Item destination, Item source)
@@ -229,6 +196,38 @@ namespace NeatMediumcore
             base.SplitStack(destination, source, numToTransfer);
         }
 
+        #region Debug
+
+        public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
+        {
+            if(ModContent.GetInstance<NMConfig>().ShowDebugInfoInventoryToggle)
+            {
+                NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
+                tooltips.Add(new TooltipLine(Mod, "Tooltip100", $"[c/FF8888:Inventory Type:] {nMItem.inventoryType}"));
+                tooltips.Add(new TooltipLine(Mod, "Tooltip101", $"[c/FF8888:Slot ID:] {nMItem.slotID}"));
+                tooltips.Add(new TooltipLine(Mod, "Tooltip102", $"[c/FF8888:Owner ID:] {nMItem.ownerID}"));
+                tooltips.Add(new TooltipLine(Mod, "Tooltip103", $"[c/FF8888:Latest Death Count:] {nMItem.latestDeathCount}"));
+                tooltips.Add(new TooltipLine(Mod, "Tooltip104", $"[c/FF8888:Favourited:] {nMItem.nMFavourited}"));
+            }
+            base.ModifyTooltips(item, tooltips);
+        }
+
+        public override void PostDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+        {
+            if(ModContent.GetInstance<NMConfig>().ShowDebugInfoDroppedToggle)
+            {
+                var position = item.Center - Main.screenPosition;
+                NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
+                string text = $"Inventory: {nMItem.inventoryType}\nSlot: {nMItem.slotID}\nOwner: {nMItem.ownerID}\nLatest Death: {nMItem.latestDeathCount}\nFavourited: {nMItem.nMFavourited}";
+                Utils.DrawBorderString(spriteBatch, text, position, Color.White);
+            }
+            base.PostDrawInWorld(item, spriteBatch, lightColor, alphaColor, rotation, scale, whoAmI);
+        }
+
+        #endregion
+
+        #region Network Sync
+
         public override void NetSend(Item item, BinaryWriter writer)
         {
             writer.Write(latestDeathCount);
@@ -251,5 +250,6 @@ namespace NeatMediumcore
             base.NetReceive(item, reader);
         }
 
+        #endregion
     }
 }

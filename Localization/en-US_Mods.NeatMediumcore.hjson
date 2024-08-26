@@ -1,20 +1,25 @@
 Configs: {
 	NMConfig: {
-		DisplayName: N M Config
+		DisplayName: Neat Mediumcore Config
 
 		ShowButtonsToggle: {
-			Label: Show Buttons Toggle
-			Tooltip: ""
+			Label: Show multiplayer button
+			Tooltip: Shows button that allows to pick up other players items (Only works in multiplayer)
 		}
 
 		ItemsGlowToggle: {
-			Label: Items Glow Toggle
-			Tooltip: ""
+			Label: Items Glow
+			Tooltip: Items glow when dropped in the world
 		}
 
-		ShowDebugInfoToggle: {
-			Label: Show Debug Info Toggle
-			Tooltip: ""
+		ShowDebugInfoInventoryToggle: {
+			Label: Show debug info in inventory
+			Tooltip: Shows debug info in inventory
+		}
+
+		ShowDebugInfoDroppedToggle: {
+			Label: Show debug info on dropped items
+			Tooltip: Shows debug info on dropped items
 		}
 	}
 }

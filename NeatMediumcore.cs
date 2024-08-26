@@ -65,13 +65,4 @@ namespace NeatMediumcore
 			}
 		}
 	}
-
-    public class NMButton : UIImageButton
-    {
-        public NMButton(Asset<Texture2D> texture) : base(texture)
-        {
-            
-        }
-
-    }
 }

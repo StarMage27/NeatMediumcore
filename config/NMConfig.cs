@@ -14,6 +14,9 @@ namespace NeatMediumcore.Config
 		public bool ItemsGlowToggle;
 
         [DefaultValue(false)]
-		public bool ShowDebugInfoToggle;
+		public bool ShowDebugInfoInventoryToggle;
+
+        [DefaultValue(false)]
+		public bool ShowDebugInfoDroppedToggle;
     }
 }
