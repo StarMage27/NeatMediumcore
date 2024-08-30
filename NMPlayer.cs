@@ -12,52 +12,18 @@ namespace NeatMediumcore
 {
     public class NMPlayer : ModPlayer
     {
-        public bool canPickUpAnotherPlayersItems;
+        public bool canPickUpAnotherPlayersItems = false;
+        public int playerID = -1;
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            if (Main.LocalPlayer.difficulty.Equals(PlayerDifficultyID.MediumCore))
+            if (NMBind.JustPressed && Main.LocalPlayer.difficulty.Equals(PlayerDifficultyID.MediumCore))
             {
-                if (NMBind.JustPressed)
-                {
-                    Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems = !Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems;
-                }
+                Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems = !Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems;
             }
         }
 
         #region Logic
-
-        private void UpdateSelectInventory(ref Item[] inventory, InventoryType inventoryType)
-        {
-            for (int slotID = 0; slotID < inventory.Length; slotID++)
-            {
-                Item item = inventory[slotID];
-                
-                if (item != null && !item.IsAir)
-                {
-                    NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
-
-                    if (nMItem.latestDeathCount == -1 || (nMItem.inventoryType != inventoryType))
-                    {
-                        nMItem.latestDeathCount = CountDeaths(Player);
-                    }
-
-                    if (inventoryType == InventoryType.Inventory && item == Main.LocalPlayer.inventory[58]) // for the item in the mouse slot
-                    {
-                        nMItem.slotID = -1;
-                        nMItem.nMFavourited = false;
-                    }
-                    else
-                    {
-                        nMItem.slotID = slotID;
-                        nMItem.nMFavourited = item.favorited;
-                    }
-
-                    nMItem.inventoryType = inventoryType;
-                    nMItem.ownerID = Player.whoAmI;
-                }
-            }
-        }
 
         public override bool OnPickup(Item item)
         {
@@ -67,64 +33,79 @@ namespace NeatMediumcore
             }
 
             NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
-            if(nMItem.ownerID != Player.whoAmI || nMItem.latestDeathCount == -1 || nMItem.slotID == -1 || nMItem.inventoryType == InventoryType.None)
+
+            if(nMItem.nMOwnerID != playerID || nMItem.nMLatestDeathCount == -1 || nMItem.nMSlotID == -1 || nMItem.inventoryType == InventoryType.None)
             {
-                nMItem.ownerID = Player.whoAmI;
+                nMItem.nMOwnerID = playerID;
                 return base.OnPickup(item);
             }
 
             item.newAndShiny = false;
 
-            nMItem.ownerID = Player.whoAmI;
+            nMItem.nMOwnerID = playerID;
             InventoryType inventoryType = nMItem.inventoryType;
             item.favorited = nMItem.nMFavourited;
 
             switch(inventoryType)
             {
-                case InventoryType.Inventory:
-                {
-                    return nMOnPickup(ref Player.inventory, ref item);
-                }
                 case InventoryType.Armor:
                 {
-                    return nMOnPickup(ref Player.armor, ref item);
+                    if (nMItem.nMLoadoutID == Player.CurrentLoadoutIndex)
+                    {
+                        return nMOnPickup(ref Player.armor, ref item);
+                    }
+                    else
+                    {
+                        return nMOnPickup(ref Player.Loadouts[nMItem.nMLoadoutID].Armor, ref item);
+                    }
+                }
+                case InventoryType.Dye:
+                {
+                    if (nMItem.nMLoadoutID == Player.CurrentLoadoutIndex)
+                    {
+                        return nMOnPickup(ref Player.dye, ref item);
+                    }
+                    else
+                    {
+                        return nMOnPickup(ref Player.Loadouts[nMItem.nMLoadoutID].Dye, ref item);
+                    }
                 }
                 case InventoryType.MiscEquips:
                 {
                     return nMOnPickup(ref Player.miscEquips, ref item);
                 }
-                case InventoryType.Dye:
-                {
-                    return nMOnPickup(ref Player.dye, ref item);
-                }
                 case InventoryType.MiscDyes:
                 {
                     return nMOnPickup(ref Player.miscDyes, ref item);
                 }
-                case InventoryType.Loadout0Armor:
+                case InventoryType.Inventory:
                 {
-                    return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
+                    return nMOnPickup(ref Player.inventory, ref item);
                 }
-                case InventoryType.Loadout0Dye:
-                {
-                    return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
-                }
-                case InventoryType.Loadout1Armor:
-                {
-                    return nMOnPickup(ref Player.Loadouts[1].Armor, ref item);
-                }
-                case InventoryType.Loadout1Dye:
-                {
-                    return nMOnPickup(ref Player.Loadouts[1].Dye, ref item);
-                }
-                case InventoryType.Loadout2Armor:
-                {
-                    return nMOnPickup(ref Player.Loadouts[2].Armor, ref item);
-                }
-                case InventoryType.Loadout2Dye:
-                {
-                    return nMOnPickup(ref Player.Loadouts[2].Dye, ref item);
-                }
+                // case InventoryType.Loadout0Armor:
+                // {
+                //     return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
+                // }
+                // case InventoryType.Loadout0Dye:
+                // {
+                //     return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
+                // }
+                // case InventoryType.Loadout1Armor:
+                // {
+                //     return nMOnPickup(ref Player.Loadouts[1].Armor, ref item);
+                // }
+                // case InventoryType.Loadout1Dye:
+                // {
+                //     return nMOnPickup(ref Player.Loadouts[1].Dye, ref item);
+                // }
+                // case InventoryType.Loadout2Armor:
+                // {
+                //     return nMOnPickup(ref Player.Loadouts[2].Armor, ref item);
+                // }
+                // case InventoryType.Loadout2Dye:
+                // {
+                //     return nMOnPickup(ref Player.Loadouts[2].Dye, ref item);
+                // }
                 default:
                 {
                     return base.OnPickup(item);
@@ -134,11 +115,16 @@ namespace NeatMediumcore
 
         private bool nMOnPickup(ref Item[] inventory, ref Item item)
         {
+            if (!Main.LocalPlayer.difficulty.Equals(PlayerDifficultyID.MediumCore))
+            {
+                return base.OnPickup(item);
+            }
+
             NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
-            int slotID = nMItem.slotID;
+            int slotID = nMItem.nMSlotID;
             Item inventoryItem = inventory[slotID];
 
-            if(nMItem.ownerID != Main.LocalPlayer.whoAmI)
+            if(nMItem.nMOwnerID != playerID)
             {
                 return base.OnPickup(item);
             }
@@ -163,15 +149,15 @@ namespace NeatMediumcore
             if
             (
                 item.favorited
-                || (nMItem.latestDeathCount < inventoryNMItem.latestDeathCount && !inventoryItem.favorited)
-                || (inventoryNMItem.latestDeathCount == -1 && !inventoryItem.favorited)
+                || (nMItem.nMLatestDeathCount < inventoryNMItem.nMLatestDeathCount && !inventoryItem.favorited)
+                || (inventoryNMItem.nMLatestDeathCount == -1 && !inventoryItem.favorited)
             )
             {
                 inventory[slotID].favorited = false;
 
-                inventoryNMItem.ownerID = -1;
-                inventoryNMItem.latestDeathCount = -1;
-                inventoryNMItem.slotID = 0;
+                inventoryNMItem.nMOwnerID = -1;
+                inventoryNMItem.nMLatestDeathCount = -1;
+                inventoryNMItem.nMSlotID = 0;
                 inventoryNMItem.inventoryType = InventoryType.None;
                 inventoryNMItem.nMFavourited = false;
 
@@ -205,34 +191,100 @@ namespace NeatMediumcore
                 return base.PreKill(damage, hitDirection, pvp, ref playSound, ref genDust, ref damageSource);
             }
 
-            UpdateSelectInventory(ref Player.inventory, InventoryType.Inventory);
             UpdateSelectInventory(ref Player.armor, InventoryType.Armor);
-            UpdateSelectInventory(ref Player.miscEquips, InventoryType.MiscEquips);
             UpdateSelectInventory(ref Player.dye, InventoryType.Dye);
+
+            for (int i = 0; i < Player.Loadouts.Length; i++)
+            {
+                if (i == Player.CurrentLoadoutIndex)
+                {
+                    UpdateSelectInventory(ref Player.armor, InventoryType.Armor, i);
+                    UpdateSelectInventory(ref Player.dye, InventoryType.Dye, i);
+                }
+                else
+                {
+                    UpdateSelectInventory(ref Player.Loadouts[i].Armor, InventoryType.Armor, i);
+                    UpdateSelectInventory(ref Player.Loadouts[i].Dye, InventoryType.Dye, i);
+                }
+            }
+
+            // UpdateSelectInventory(ref Player.Loadouts[0].Armor, InventoryType.Loadout0Armor);
+            // UpdateSelectInventory(ref Player.Loadouts[0].Dye, InventoryType.Loadout0Dye);
+            // UpdateSelectInventory(ref Player.Loadouts[1].Armor, InventoryType.Loadout1Armor);
+            // UpdateSelectInventory(ref Player.Loadouts[1].Dye, InventoryType.Loadout1Dye);
+            // UpdateSelectInventory(ref Player.Loadouts[2].Armor, InventoryType.Loadout2Armor);
+            // UpdateSelectInventory(ref Player.Loadouts[2].Dye, InventoryType.Loadout2Dye);
+
+            UpdateSelectInventory(ref Player.inventory, InventoryType.Inventory);
+            UpdateSelectInventory(ref Player.miscEquips, InventoryType.MiscEquips);
             UpdateSelectInventory(ref Player.miscDyes, InventoryType.MiscDyes);
-            UpdateSelectInventory(ref Player.Loadouts[0].Armor, InventoryType.Loadout0Armor);
-            UpdateSelectInventory(ref Player.Loadouts[0].Dye, InventoryType.Loadout0Dye);
-            UpdateSelectInventory(ref Player.Loadouts[1].Armor, InventoryType.Loadout1Armor);
-            UpdateSelectInventory(ref Player.Loadouts[1].Dye, InventoryType.Loadout1Dye);
-            UpdateSelectInventory(ref Player.Loadouts[2].Armor, InventoryType.Loadout2Armor);
-            UpdateSelectInventory(ref Player.Loadouts[2].Dye, InventoryType.Loadout2Dye);
             
             return base.PreKill(damage, hitDirection, pvp, ref playSound, ref genDust, ref damageSource);
         }
 
+        private void UpdateSelectInventory(ref Item[] inventory, InventoryType inventoryType, int loadoutID = -1)
+        {
+            for (int slotID = 0; slotID < inventory.Length; slotID++)
+            {
+                Item item = inventory[slotID];
+                
+                if (item != null && !item.IsAir)
+                {
+                    NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
+
+                    if (nMItem.nMLatestDeathCount == -1 || (nMItem.inventoryType != inventoryType))
+                    {
+                        nMItem.nMLatestDeathCount = CountDeaths(Player);
+                    }
+
+                    if (inventoryType == InventoryType.Inventory && item == Main.LocalPlayer.inventory[58]) // for the item in the mouse slot
+                    {
+                        nMItem.nMSlotID = -1;
+                        nMItem.nMFavourited = false;
+                    }
+                    else
+                    {
+                        nMItem.nMSlotID = slotID;
+                        nMItem.nMFavourited = item.favorited;
+                    }
+
+                    nMItem.inventoryType = inventoryType;
+                    nMItem.nMOwnerID = playerID;
+                    nMItem.nMLoadoutID = loadoutID;
+                }
+            }
+        }
+
         #endregion
+
+        public override void OnEnterWorld()
+        {
+            if (playerID == -1)
+            {
+                playerID = Player.GetHashCode();
+            }
+            base.OnEnterWorld();
+        }
 
         #region Save Data
 
         public override void SaveData(TagCompound tag)
         {
             tag.Add("NMCcanPickUpAnotherPlayersItems", canPickUpAnotherPlayersItems);
+            tag.Add("NMPlayerID", playerID);
             base.SaveData(tag);
         }
 
         public override void LoadData(TagCompound tag)
         {
-            canPickUpAnotherPlayersItems = tag.GetBool("NMCcanPickUpAnotherPlayersItems");
+            if (tag.ContainsKey("NMCcanPickUpAnotherPlayersItems"))
+            {
+                canPickUpAnotherPlayersItems = tag.GetBool("NMCcanPickUpAnotherPlayersItems");
+            }
+            if (tag.ContainsKey("NMPlayerID"))
+            {
+                playerID = tag.GetInt("NMPlayerID");
+            }
             base.LoadData(tag);
         }
 
@@ -244,22 +296,25 @@ namespace NeatMediumcore
 			ModPacket packet = Mod.GetPacket();
 			packet.Write((byte)Player.whoAmI);
 			packet.Write((byte)(canPickUpAnotherPlayersItems ? 1 : 0));
+            packet.Write(playerID);
 			packet.Send(toWho, fromWho);
 		}
 
 		public void ReceivePlayerSync(BinaryReader reader) {
 			canPickUpAnotherPlayersItems = reader.ReadBoolean();
+            playerID = reader.ReadInt32();
 		}
 
 		public override void CopyClientState(ModPlayer targetCopy) {
 			NMPlayer clone = (NMPlayer)targetCopy;
 			clone.canPickUpAnotherPlayersItems = canPickUpAnotherPlayersItems;
+            clone.playerID = playerID;
 		}
 
 		public override void SendClientChanges(ModPlayer clientPlayer) {
 			NMPlayer clone = (NMPlayer)clientPlayer;
 
-			if (canPickUpAnotherPlayersItems != clone.canPickUpAnotherPlayersItems)
+			if (canPickUpAnotherPlayersItems != clone.canPickUpAnotherPlayersItems || playerID != clone.playerID)
             {
 				SyncPlayer(toWho: -1, fromWho: Main.myPlayer, newPlayer: false);
             }

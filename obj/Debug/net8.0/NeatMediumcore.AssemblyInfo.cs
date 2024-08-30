@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NeatMediumcore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1dc3cdd4a9e395338a35fd0bba4fa88f26b8f96b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7ac9db7dba070914e1bbca5297c2fd2ae6ab5116")]
 [assembly: System.Reflection.AssemblyProductAttribute("NeatMediumcore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NeatMediumcore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

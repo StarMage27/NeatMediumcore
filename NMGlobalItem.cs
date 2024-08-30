@@ -22,19 +22,21 @@ namespace NeatMediumcore
 {
     public class NMGlobalItem : GlobalItem
     {
-        public InventoryType inventoryType;
-        public int slotID;
-        public int ownerID = -1;
-        public int latestDeathCount = -1;
-        public bool nMFavourited;
+        public InventoryType inventoryType = InventoryType.None;
+        public int nMSlotID = -1;
+        public int nMOwnerID = -1;
+        public int nMLatestDeathCount = -1;
+        public bool nMFavourited = false;
+        public int nMLoadoutID = -1;
         
         public override bool InstancePerEntity => true;
 
         public override bool ItemSpace(Item item, Player player)
         {
             NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
+            NMPlayer nMPlayer = player.GetModPlayer<NMPlayer>();
             int playerDeathCount = CountDeaths(player);
-            if(nMItem.latestDeathCount < playerDeathCount && nMItem.ownerID == player.whoAmI && nMItem.latestDeathCount != -1)
+            if(nMItem.nMLatestDeathCount < playerDeathCount && nMItem.nMOwnerID == nMPlayer.playerID && nMItem.nMLatestDeathCount != -1)
             {
                 return true;
             }
@@ -48,9 +50,9 @@ namespace NeatMediumcore
         {
             NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
             bool itemsGlow = ModContent.GetInstance<NMConfig>().ItemsGlowToggle;
-            if (nMItem.ownerID != -1 && itemsGlow)
+            if (nMItem.nMOwnerID != -1 && itemsGlow)
             {
-                switch(Main.player[nMItem.ownerID].team)
+                switch(Main.player[nMItem.nMOwnerID].team)
                 {
                     case 1: // Red Team
                     {
@@ -98,9 +100,9 @@ namespace NeatMediumcore
             }
             else
             {
-                nMItem.ownerID = -1;
-                nMItem.latestDeathCount = -1;
-                nMItem.slotID = -1;
+                nMItem.nMOwnerID = -1;
+                nMItem.nMLatestDeathCount = -1;
+                nMItem.nMSlotID = -1;
                 nMItem.inventoryType = InventoryType.None;
                 nMItem.nMFavourited = false;
                 base.OnSpawn(item, source);
@@ -111,7 +113,7 @@ namespace NeatMediumcore
         {
             NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
             NMPlayer nMPlayer = player.GetModPlayer<NMPlayer>();
-            if (nMItem.ownerID == player.whoAmI || nMPlayer.canPickUpAnotherPlayersItems == true || nMItem.ownerID == -1)
+            if (nMItem.nMOwnerID == nMPlayer.playerID || nMPlayer.canPickUpAnotherPlayersItems == true || nMItem.nMOwnerID == -1)
             {
                 return base.CanPickup(item, player);
             }
@@ -126,9 +128,9 @@ namespace NeatMediumcore
             NMGlobalItem nMDestination = destination.GetGlobalItem<NMGlobalItem>();
             NMGlobalItem nMSource = source.GetGlobalItem<NMGlobalItem>();
 
-            if (nMDestination.ownerID == nMSource.ownerID)
+            if (nMDestination.nMOwnerID == nMSource.nMOwnerID)
             {
-                if (nMDestination.slotID != nMSource.slotID || nMDestination.inventoryType != nMSource.inventoryType)
+                if (nMDestination.nMSlotID != nMSource.nMSlotID || nMDestination.inventoryType != nMSource.inventoryType)
                 {
                     return false;
                 }
@@ -150,11 +152,11 @@ namespace NeatMediumcore
                 NMGlobalItem nMFrom = from.GetGlobalItem<NMGlobalItem>();
                 NMGlobalItem nMTo = to.GetGlobalItem<NMGlobalItem>();
 
-                nMTo.latestDeathCount = nMFrom.latestDeathCount;
-                nMTo.slotID = nMFrom.slotID;
+                nMTo.nMLatestDeathCount = nMFrom.nMLatestDeathCount;
+                nMTo.nMSlotID = nMFrom.nMSlotID;
                 nMTo.inventoryType = nMFrom.inventoryType;
                 nMTo.nMFavourited = nMFrom.nMFavourited;
-                nMTo.ownerID = nMFrom.ownerID;
+                nMTo.nMOwnerID = nMFrom.nMOwnerID;
             }
             return base.Clone(from, to);
         }
@@ -165,25 +167,25 @@ namespace NeatMediumcore
             NMGlobalItem nMSource = source.GetGlobalItem<NMGlobalItem>();
 
             int earliestDeath;
-            if (nMSource.latestDeathCount == -1 && nMDestination.latestDeathCount == -1)
+            if (nMSource.nMLatestDeathCount == -1 && nMDestination.nMLatestDeathCount == -1)
             {
                 earliestDeath = -1;
             }
-            else if (nMSource.latestDeathCount == -1)
+            else if (nMSource.nMLatestDeathCount == -1)
             {
-                earliestDeath = nMDestination.latestDeathCount;
+                earliestDeath = nMDestination.nMLatestDeathCount;
             }
-            else if (nMDestination.latestDeathCount == -1)
+            else if (nMDestination.nMLatestDeathCount == -1)
             {
-                earliestDeath = nMSource.latestDeathCount;
+                earliestDeath = nMSource.nMLatestDeathCount;
             }
             else
             {
-                earliestDeath = Math.Min(nMSource.latestDeathCount, nMDestination.latestDeathCount);
+                earliestDeath = Math.Min(nMSource.nMLatestDeathCount, nMDestination.nMLatestDeathCount);
             }
             
-            nMDestination.latestDeathCount = earliestDeath;
-            nMSource.slotID = nMDestination.slotID;
+            nMDestination.nMLatestDeathCount = earliestDeath;
+            nMSource.nMSlotID = nMDestination.nMSlotID;
             nMSource.inventoryType = nMDestination.inventoryType;
             nMSource.nMFavourited = nMDestination.nMFavourited;
 
@@ -192,7 +194,7 @@ namespace NeatMediumcore
 
         public override void SplitStack(Item destination, Item source, int numToTransfer)
         {
-            destination.GetGlobalItem<NMGlobalItem>().latestDeathCount = source.GetGlobalItem<NMGlobalItem>().latestDeathCount;
+            destination.GetGlobalItem<NMGlobalItem>().nMLatestDeathCount = source.GetGlobalItem<NMGlobalItem>().nMLatestDeathCount;
             base.SplitStack(destination, source, numToTransfer);
         }
 
@@ -204,10 +206,11 @@ namespace NeatMediumcore
             {
                 NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
                 tooltips.Add(new TooltipLine(Mod, "Tooltip100", $"[c/FF8888:Inventory Type:] {nMItem.inventoryType}"));
-                tooltips.Add(new TooltipLine(Mod, "Tooltip101", $"[c/FF8888:Slot ID:] {nMItem.slotID}"));
-                tooltips.Add(new TooltipLine(Mod, "Tooltip102", $"[c/FF8888:Owner ID:] {nMItem.ownerID}"));
-                tooltips.Add(new TooltipLine(Mod, "Tooltip103", $"[c/FF8888:Latest Death Count:] {nMItem.latestDeathCount}"));
+                tooltips.Add(new TooltipLine(Mod, "Tooltip101", $"[c/FF8888:Slot ID:] {nMItem.nMSlotID}"));
+                tooltips.Add(new TooltipLine(Mod, "Tooltip102", $"[c/FF8888:Owner ID:] {nMItem.nMOwnerID}"));
+                tooltips.Add(new TooltipLine(Mod, "Tooltip103", $"[c/FF8888:Latest Death Count:] {nMItem.nMLatestDeathCount}"));
                 tooltips.Add(new TooltipLine(Mod, "Tooltip104", $"[c/FF8888:Favourited:] {nMItem.nMFavourited}"));
+                tooltips.Add(new TooltipLine(Mod, "Tooltip105", $"[c/FF8888:Loadout:] {nMItem.nMLoadoutID}"));
             }
             base.ModifyTooltips(item, tooltips);
         }
@@ -218,7 +221,7 @@ namespace NeatMediumcore
             {
                 var position = item.Center - Main.screenPosition;
                 NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
-                string text = $"Inventory: {nMItem.inventoryType}\nSlot: {nMItem.slotID}\nOwner: {nMItem.ownerID}\nLatest Death: {nMItem.latestDeathCount}\nFavourited: {nMItem.nMFavourited}";
+                string text = $"Inventory: {nMItem.inventoryType}\nSlot: {nMItem.nMSlotID}\nOwner: {nMItem.nMOwnerID}\nLatest Death: {nMItem.nMLatestDeathCount}\nFavourited: {nMItem.nMFavourited}\nLoadout: {nMItem.nMLoadoutID}";
                 Utils.DrawBorderString(spriteBatch, text, position, Color.White);
             }
             base.PostDrawInWorld(item, spriteBatch, lightColor, alphaColor, rotation, scale, whoAmI);
@@ -230,24 +233,69 @@ namespace NeatMediumcore
 
         public override void NetSend(Item item, BinaryWriter writer)
         {
-            writer.Write(latestDeathCount);
-            writer.Write(ownerID);
-            writer.Write(slotID);
+            writer.Write(nMLatestDeathCount);
+            writer.Write(nMOwnerID);
+            writer.Write(nMSlotID);
             writer.Write((int)inventoryType);
             writer.Write(nMFavourited);
+            writer.Write(nMLoadoutID);
 
             base.NetSend(item, writer);
         }
 
         public override void NetReceive(Item item, BinaryReader reader)
         {
-            latestDeathCount = reader.ReadInt32();
-            ownerID = reader.ReadInt32();
-            slotID = reader.ReadInt32();
+            nMLatestDeathCount = reader.ReadInt32();
+            nMOwnerID = reader.ReadInt32();
+            nMSlotID = reader.ReadInt32();
             inventoryType = (InventoryType)reader.ReadInt32();
             nMFavourited = reader.ReadBoolean();
+            nMLoadoutID = reader.ReadInt32();
 
             base.NetReceive(item, reader);
+        }
+
+        #endregion
+
+        #region Save Data
+        public override void SaveData(Item item, TagCompound tag)
+        {
+            tag.Add("NMInventoryType", (int)inventoryType);
+            tag.Add("NMSlotID", nMSlotID);
+            tag.Add("NMOwnerID", nMOwnerID);
+            tag.Add("NMLatestDeathCount", nMLatestDeathCount);
+            tag.Add("NMFavourited", nMFavourited);
+            tag.Add("NMLoadoutID", nMLoadoutID);
+            base.SaveData(item, tag);
+        }
+
+        public override void LoadData(Item item, TagCompound tag)
+        {
+            if (tag.ContainsKey("NMInventoryType"))
+            {
+                inventoryType = (InventoryType)tag.GetInt("NMInventoryType");
+            }
+            if (tag.ContainsKey("NMSlotID"))
+            {
+                nMSlotID = tag.GetInt("NMSlotID");
+            }
+            if (tag.ContainsKey("NMOwnerID"))
+            {
+                nMOwnerID = tag.GetInt("NMOwnerID");
+            }
+            if (tag.ContainsKey("NMLatestDeathCount"))
+            {
+                nMLatestDeathCount = tag.GetInt("NMLatestDeathCount");
+            }
+            if (tag.ContainsKey("NMFavourited"))
+            {
+                nMFavourited = tag.GetBool("NMFavourited");
+            }
+            if (tag.ContainsKey("NMLoadoutID"))
+            {
+                nMLoadoutID = tag.GetInt("NMLoadoutID");
+            }
+            base.LoadData(item, tag);
         }
 
         #endregion
