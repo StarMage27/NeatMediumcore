@@ -38,9 +38,6 @@ namespace NeatMediumcore
             MiscEquips,
             Dye,
             MiscDyes,
-            Loadout0Armor, Loadout0Dye,
-            Loadout1Armor, Loadout1Dye,
-            Loadout2Armor, Loadout2Dye,
             None,
             WingSlot, ShoeSlot, MoreAccessories, PotionSlots
             // inventory, armor, miscEquips, dye, miscDyes, trashItem, default

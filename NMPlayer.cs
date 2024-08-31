@@ -34,7 +34,7 @@ namespace NeatMediumcore
 
             NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
 
-            if(nMItem.nMOwnerID != playerID || nMItem.nMLatestDeathCount == -1 || nMItem.nMSlotID == -1 || nMItem.inventoryType == InventoryType.None)
+            if(nMItem.nMOwnerID != playerID || nMItem.nMLatestDeathCount == -1 || nMItem.nMSlotID == -1 || nMItem.nMInventoryType == InventoryType.None)
             {
                 nMItem.nMOwnerID = playerID;
                 return base.OnPickup(item);
@@ -43,7 +43,7 @@ namespace NeatMediumcore
             item.newAndShiny = false;
 
             nMItem.nMOwnerID = playerID;
-            InventoryType inventoryType = nMItem.inventoryType;
+            InventoryType inventoryType = nMItem.nMInventoryType;
             item.favorited = nMItem.nMFavourited;
 
             switch(inventoryType)
@@ -82,30 +82,6 @@ namespace NeatMediumcore
                 {
                     return nMOnPickup(ref Player.inventory, ref item);
                 }
-                // case InventoryType.Loadout0Armor:
-                // {
-                //     return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
-                // }
-                // case InventoryType.Loadout0Dye:
-                // {
-                //     return nMOnPickup(ref Player.Loadouts[0].Armor, ref item);
-                // }
-                // case InventoryType.Loadout1Armor:
-                // {
-                //     return nMOnPickup(ref Player.Loadouts[1].Armor, ref item);
-                // }
-                // case InventoryType.Loadout1Dye:
-                // {
-                //     return nMOnPickup(ref Player.Loadouts[1].Dye, ref item);
-                // }
-                // case InventoryType.Loadout2Armor:
-                // {
-                //     return nMOnPickup(ref Player.Loadouts[2].Armor, ref item);
-                // }
-                // case InventoryType.Loadout2Dye:
-                // {
-                //     return nMOnPickup(ref Player.Loadouts[2].Dye, ref item);
-                // }
                 default:
                 {
                     return base.OnPickup(item);
@@ -158,7 +134,7 @@ namespace NeatMediumcore
                 inventoryNMItem.nMOwnerID = -1;
                 inventoryNMItem.nMLatestDeathCount = -1;
                 inventoryNMItem.nMSlotID = 0;
-                inventoryNMItem.inventoryType = InventoryType.None;
+                inventoryNMItem.nMInventoryType = InventoryType.None;
                 inventoryNMItem.nMFavourited = false;
 
                 Player.QuickSpawnItem(Player.GetSource_FromThis(), inventoryItem, inventoryItem.stack);
@@ -208,13 +184,6 @@ namespace NeatMediumcore
                 }
             }
 
-            // UpdateSelectInventory(ref Player.Loadouts[0].Armor, InventoryType.Loadout0Armor);
-            // UpdateSelectInventory(ref Player.Loadouts[0].Dye, InventoryType.Loadout0Dye);
-            // UpdateSelectInventory(ref Player.Loadouts[1].Armor, InventoryType.Loadout1Armor);
-            // UpdateSelectInventory(ref Player.Loadouts[1].Dye, InventoryType.Loadout1Dye);
-            // UpdateSelectInventory(ref Player.Loadouts[2].Armor, InventoryType.Loadout2Armor);
-            // UpdateSelectInventory(ref Player.Loadouts[2].Dye, InventoryType.Loadout2Dye);
-
             UpdateSelectInventory(ref Player.inventory, InventoryType.Inventory);
             UpdateSelectInventory(ref Player.miscEquips, InventoryType.MiscEquips);
             UpdateSelectInventory(ref Player.miscDyes, InventoryType.MiscDyes);
@@ -232,7 +201,7 @@ namespace NeatMediumcore
                 {
                     NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
 
-                    if (nMItem.nMLatestDeathCount == -1 || (nMItem.inventoryType != inventoryType))
+                    if (nMItem.nMLatestDeathCount == -1 || (nMItem.nMInventoryType != inventoryType))
                     {
                         nMItem.nMLatestDeathCount = CountDeaths(Player);
                     }
@@ -248,7 +217,7 @@ namespace NeatMediumcore
                         nMItem.nMFavourited = item.favorited;
                     }
 
-                    nMItem.inventoryType = inventoryType;
+                    nMItem.nMInventoryType = inventoryType;
                     nMItem.nMOwnerID = playerID;
                     nMItem.nMLoadoutID = loadoutID;
                 }

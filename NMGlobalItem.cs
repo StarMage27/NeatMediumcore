@@ -22,12 +22,12 @@ namespace NeatMediumcore
 {
     public class NMGlobalItem : GlobalItem
     {
-        public InventoryType inventoryType = InventoryType.None;
         public int nMSlotID = -1;
         public int nMOwnerID = -1;
         public int nMLatestDeathCount = -1;
-        public bool nMFavourited = false;
         public int nMLoadoutID = -1;
+        public bool nMFavourited = false;
+        public InventoryType nMInventoryType = InventoryType.None;
         
         public override bool InstancePerEntity => true;
 
@@ -103,7 +103,8 @@ namespace NeatMediumcore
                 nMItem.nMOwnerID = -1;
                 nMItem.nMLatestDeathCount = -1;
                 nMItem.nMSlotID = -1;
-                nMItem.inventoryType = InventoryType.None;
+                nMItem.nMInventoryType = InventoryType.None;
+                nMItem.nMLoadoutID = -1;
                 nMItem.nMFavourited = false;
                 base.OnSpawn(item, source);
             }
@@ -130,7 +131,7 @@ namespace NeatMediumcore
 
             if (nMDestination.nMOwnerID == nMSource.nMOwnerID)
             {
-                if (nMDestination.nMSlotID != nMSource.nMSlotID || nMDestination.inventoryType != nMSource.inventoryType)
+                if (nMDestination.nMSlotID != nMSource.nMSlotID || nMDestination.nMInventoryType != nMSource.nMInventoryType || nMSource.nMLoadoutID != nMDestination.nMLoadoutID)
                 {
                     return false;
                 }
@@ -154,8 +155,9 @@ namespace NeatMediumcore
 
                 nMTo.nMLatestDeathCount = nMFrom.nMLatestDeathCount;
                 nMTo.nMSlotID = nMFrom.nMSlotID;
-                nMTo.inventoryType = nMFrom.inventoryType;
+                nMTo.nMInventoryType = nMFrom.nMInventoryType;
                 nMTo.nMFavourited = nMFrom.nMFavourited;
+                nMTo.nMLoadoutID = nMFrom.nMLoadoutID;
                 nMTo.nMOwnerID = nMFrom.nMOwnerID;
             }
             return base.Clone(from, to);
@@ -186,7 +188,8 @@ namespace NeatMediumcore
             
             nMDestination.nMLatestDeathCount = earliestDeath;
             nMSource.nMSlotID = nMDestination.nMSlotID;
-            nMSource.inventoryType = nMDestination.inventoryType;
+            nMSource.nMInventoryType = nMDestination.nMInventoryType;
+            nMSource.nMLoadoutID = nMDestination.nMLoadoutID;
             nMSource.nMFavourited = nMDestination.nMFavourited;
 
             base.OnStack(destination, source, numToTransfer);
@@ -205,7 +208,7 @@ namespace NeatMediumcore
             if(ModContent.GetInstance<NMConfig>().ShowDebugInfoInventoryToggle)
             {
                 NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
-                tooltips.Add(new TooltipLine(Mod, "Tooltip100", $"[c/FF8888:Inventory Type:] {nMItem.inventoryType}"));
+                tooltips.Add(new TooltipLine(Mod, "Tooltip100", $"[c/FF8888:Inventory Type:] {nMItem.nMInventoryType}"));
                 tooltips.Add(new TooltipLine(Mod, "Tooltip101", $"[c/FF8888:Slot ID:] {nMItem.nMSlotID}"));
                 tooltips.Add(new TooltipLine(Mod, "Tooltip102", $"[c/FF8888:Owner ID:] {nMItem.nMOwnerID}"));
                 tooltips.Add(new TooltipLine(Mod, "Tooltip103", $"[c/FF8888:Latest Death Count:] {nMItem.nMLatestDeathCount}"));
@@ -221,7 +224,7 @@ namespace NeatMediumcore
             {
                 var position = item.Center - Main.screenPosition;
                 NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
-                string text = $"Inventory: {nMItem.inventoryType}\nSlot: {nMItem.nMSlotID}\nOwner: {nMItem.nMOwnerID}\nLatest Death: {nMItem.nMLatestDeathCount}\nFavourited: {nMItem.nMFavourited}\nLoadout: {nMItem.nMLoadoutID}";
+                string text = $"Inventory: {nMItem.nMInventoryType}\nSlot: {nMItem.nMSlotID}\nOwner: {nMItem.nMOwnerID}\nLatest Death: {nMItem.nMLatestDeathCount}\nFavourited: {nMItem.nMFavourited}\nLoadout: {nMItem.nMLoadoutID}";
                 Utils.DrawBorderString(spriteBatch, text, position, Color.White);
             }
             base.PostDrawInWorld(item, spriteBatch, lightColor, alphaColor, rotation, scale, whoAmI);
@@ -233,24 +236,26 @@ namespace NeatMediumcore
 
         public override void NetSend(Item item, BinaryWriter writer)
         {
-            writer.Write(nMLatestDeathCount);
-            writer.Write(nMOwnerID);
-            writer.Write(nMSlotID);
-            writer.Write((int)inventoryType);
-            writer.Write(nMFavourited);
-            writer.Write(nMLoadoutID);
+            NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
+            writer.Write(nMItem.nMLatestDeathCount);
+            writer.Write(nMItem.nMSlotID);
+            writer.Write(nMItem.nMOwnerID);
+            writer.Write(nMItem.nMLoadoutID);
+            writer.Write((int)nMItem.nMInventoryType);
+            writer.Write(nMItem.nMFavourited);
 
             base.NetSend(item, writer);
         }
 
         public override void NetReceive(Item item, BinaryReader reader)
         {
-            nMLatestDeathCount = reader.ReadInt32();
-            nMOwnerID = reader.ReadInt32();
-            nMSlotID = reader.ReadInt32();
-            inventoryType = (InventoryType)reader.ReadInt32();
-            nMFavourited = reader.ReadBoolean();
-            nMLoadoutID = reader.ReadInt32();
+            NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
+            nMItem.nMLatestDeathCount = reader.ReadInt32();
+            nMItem.nMSlotID = reader.ReadInt32();
+            nMItem.nMOwnerID = reader.ReadInt32();
+            nMItem.nMLoadoutID = reader.ReadInt32();
+            nMItem.nMInventoryType = (InventoryType)reader.ReadInt32();
+            nMItem.nMFavourited = reader.ReadBoolean();
 
             base.NetReceive(item, reader);
         }
@@ -260,40 +265,42 @@ namespace NeatMediumcore
         #region Save Data
         public override void SaveData(Item item, TagCompound tag)
         {
-            tag.Add("NMInventoryType", (int)inventoryType);
-            tag.Add("NMSlotID", nMSlotID);
-            tag.Add("NMOwnerID", nMOwnerID);
-            tag.Add("NMLatestDeathCount", nMLatestDeathCount);
-            tag.Add("NMFavourited", nMFavourited);
-            tag.Add("NMLoadoutID", nMLoadoutID);
+            NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
+            tag.Add("NMLatestDeathCount", nMItem.nMLatestDeathCount);
+            tag.Add("NMSlotID", nMItem.nMSlotID);
+            tag.Add("NMOwnerID", nMItem.nMOwnerID);
+            tag.Add("NMLoadoutID", nMItem.nMLoadoutID);
+            tag.Add("NMInventoryType", (int)nMItem.nMInventoryType);
+            tag.Add("NMFavourited", nMItem.nMFavourited);
             base.SaveData(item, tag);
         }
 
         public override void LoadData(Item item, TagCompound tag)
         {
-            if (tag.ContainsKey("NMInventoryType"))
+            NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
+            if (tag.ContainsKey("NMLatestDeathCount"))
             {
-                inventoryType = (InventoryType)tag.GetInt("NMInventoryType");
+                nMItem.nMLatestDeathCount = tag.GetInt("NMLatestDeathCount");
             }
             if (tag.ContainsKey("NMSlotID"))
             {
-                nMSlotID = tag.GetInt("NMSlotID");
+                nMItem.nMSlotID = tag.GetInt("NMSlotID");
             }
             if (tag.ContainsKey("NMOwnerID"))
             {
-                nMOwnerID = tag.GetInt("NMOwnerID");
-            }
-            if (tag.ContainsKey("NMLatestDeathCount"))
-            {
-                nMLatestDeathCount = tag.GetInt("NMLatestDeathCount");
-            }
-            if (tag.ContainsKey("NMFavourited"))
-            {
-                nMFavourited = tag.GetBool("NMFavourited");
+                nMItem.nMOwnerID = tag.GetInt("NMOwnerID");
             }
             if (tag.ContainsKey("NMLoadoutID"))
             {
-                nMLoadoutID = tag.GetInt("NMLoadoutID");
+                nMItem.nMLoadoutID = tag.GetInt("NMLoadoutID");
+            }
+            if (tag.ContainsKey("NMInventoryType"))
+            {
+                nMItem.nMInventoryType = (InventoryType)tag.GetInt("NMInventoryType");
+            }
+            if (tag.ContainsKey("NMFavourited"))
+            {
+                nMItem.nMFavourited = tag.GetBool("NMFavourited");
             }
             base.LoadData(item, tag);
         }
