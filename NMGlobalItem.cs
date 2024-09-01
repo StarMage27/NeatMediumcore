@@ -49,42 +49,45 @@ namespace NeatMediumcore
         public override void PostUpdate(Item item)
         {
             NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
+            //NMPlayer nMPlayer = Main.LocalPlayer.GetModPlayer<NMPlayer>();
+
             bool itemsGlow = ModContent.GetInstance<NMConfig>().ItemsGlowToggle;
             if (nMItem.nMOwnerID != -1 && itemsGlow)
             {
-                switch(Main.player[nMItem.nMOwnerID].team)
-                {
-                    case 1: // Red Team
-                    {
-                        Lighting.AddLight(item.Center, 1f, 0f, 0f);
-                        break;
-                    }
-                    case 2: // Green Team
-                    {
-                        Lighting.AddLight(item.Center, 0f, 0.5f, 0f);
-                        break;
-                    }
-                    case 3: // Blue Team
-                    {
-                        Lighting.AddLight(item.Center, 0f, 0f, 1f);
-                        break;
-                    }
-                    case 4: // Yellow Team
-                    {
-                        Lighting.AddLight(item.Center, 0.5f, 0.5f, 0f);
-                        break;
-                    }
-                    case 5: // Pink Team
-                    {
-                        Lighting.AddLight(item.Center, 0.5f, 0f, 0.5f);
-                        break;
-                    }
-                    default: 
-                    {
-                        Lighting.AddLight(item.Center, 0.33f, 0.33f, 0.33f);
-                        break;
-                    }
-                }
+                Lighting.AddLight(item.Center, 0.33f, 0.33f, 0.33f);
+                // switch(Main.player[playerRealID].team)
+                // {
+                //     case 1: // Red Team
+                //     {
+                //         Lighting.AddLight(item.Center, 1f, 0f, 0f);
+                //         break;
+                //     }
+                //     case 2: // Green Team
+                //     {
+                //         Lighting.AddLight(item.Center, 0f, 0.5f, 0f);
+                //         break;
+                //     }
+                //     case 3: // Blue Team
+                //     {
+                //         Lighting.AddLight(item.Center, 0f, 0f, 1f);
+                //         break;
+                //     }
+                //     case 4: // Yellow Team
+                //     {
+                //         Lighting.AddLight(item.Center, 0.5f, 0.5f, 0f);
+                //         break;
+                //     }
+                //     case 5: // Pink Team
+                //     {
+                //         Lighting.AddLight(item.Center, 0.5f, 0f, 0.5f);
+                //         break;
+                //     }
+                //     default: 
+                //     {
+                //         Lighting.AddLight(item.Center, 0.33f, 0.33f, 0.33f);
+                //         break;
+                //     }
+                // }
             }
 
             base.PostUpdate(item);

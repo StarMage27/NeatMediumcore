@@ -8,7 +8,7 @@ Configs: {
 		}
 
 		ItemsGlowToggle: {
-			Label: Items Glow
+			Label: Dropped items Glow
 			Tooltip: Items glow when dropped in the world
 		}
 
