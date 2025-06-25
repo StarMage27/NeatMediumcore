@@ -9,12 +9,12 @@ Configs: {
 
 		ItemsGlowToggle: {
 			Label: Dropped items Glow
-			Tooltip: Items glow when dropped in the world
+			Tooltip: Items dropped from player glow
 		}
 
 		ShowDebugInfoInventoryToggle: {
 			Label: Show debug info in inventory
-			Tooltip: Shows debug info in inventory
+			Tooltip: Shows debug info in item description
 		}
 
 		ShowDebugInfoDroppedToggle: {

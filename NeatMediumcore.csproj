@@ -22,6 +22,9 @@
 	 <Reference Include="WingSlotExtra">
        <HintPath>../../ModReader/WingSlotExtra/WingSlotExtra.dll</HintPath>
      </Reference>
+     <Reference Include="MagicStorage">
+       <HintPath>../../ModReader/MagicStorage/MagicStorage.dll</HintPath>
+     </Reference>
     </ItemGroup>
 
 </Project>

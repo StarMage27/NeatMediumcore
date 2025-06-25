@@ -1,0 +1,27 @@
+Configs: {
+	NMConfig: {
+		DisplayName: Neat Mediumcore Config
+
+		ShowButtonsToggle: {
+			Label: Показывать многопользовательскую кнопку
+			Tooltip: Показывает кнопку которая переключает подбирание чужих предметов (Работает только в многопользовательском режиме)
+		}
+
+		ItemsGlowToggle: {
+			Label: Выпавшие предметы светятся
+			Tooltip: Выпавшие с игрока предметы светятся
+		}
+
+		ShowDebugInfoInventoryToggle: {
+			Label: Показывать отладочную информацию в инвентаре
+			Tooltip: Показывает отладочную информацию в описании предметов в инвентаре
+		}
+
+		ShowDebugInfoDroppedToggle: {
+			Label: Показывать отладочную информацию в мире
+			Tooltip: Показывает отладочную информацию на выпавших в мире предметах
+		}
+	}
+}
+
+"Keybinds.Pick up other players items toggle.DisplayName": Переключить поддбирание чужих предметов

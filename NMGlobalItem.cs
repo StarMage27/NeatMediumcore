@@ -1,25 +1,18 @@
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameInput;
 using Terraria.DataStructures;
 using System.IO;
 using Terraria.ModLoader.IO;
 using System;
-using ReLogic.Utilities;
-using NeatMediumcore;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Steamworks;
-using Terraria.Audio;
 using static NeatMediumcore.NeatMediumcore;
 using NeatMediumcore.Config;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using System.Numerics;
 using System.Collections.Generic;
 
 namespace NeatMediumcore
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class NMGlobalItem : GlobalItem
     {
         public int nMSlotID = -1;
@@ -97,7 +90,7 @@ namespace NeatMediumcore
         {
             NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
 
-            if(source is EntitySource_Death parent && parent.Entity is Player player)
+            if(source is EntitySource_Death { Entity: Player })
             {                
                 base.OnSpawn(item, source);
             }
@@ -117,7 +110,7 @@ namespace NeatMediumcore
         {
             NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
             NMPlayer nMPlayer = player.GetModPlayer<NMPlayer>();
-            if (nMItem.nMOwnerID == nMPlayer.playerID || nMPlayer.canPickUpAnotherPlayersItems == true || nMItem.nMOwnerID == -1)
+            if (nMItem.nMOwnerID == nMPlayer.playerID || nMPlayer.canPickUpAnotherPlayersItems || nMItem.nMOwnerID == -1)
             {
                 return base.CanPickup(item, player);
             }
@@ -151,7 +144,7 @@ namespace NeatMediumcore
 
         public override GlobalItem Clone(Item from, Item to)
         {
-            if (!from.IsAir && from != null && !to.IsAir && to != null)
+            if (!from.IsAir && !to.IsAir)
             {
                 NMGlobalItem nMFrom = from.GetGlobalItem<NMGlobalItem>();
                 NMGlobalItem nMTo = to.GetGlobalItem<NMGlobalItem>();
@@ -172,17 +165,9 @@ namespace NeatMediumcore
             NMGlobalItem nMSource = source.GetGlobalItem<NMGlobalItem>();
 
             int earliestDeath;
-            if (nMSource.nMLatestDeathCount == -1 && nMDestination.nMLatestDeathCount == -1)
+            if (nMSource.nMLatestDeathCount == -1 || nMDestination.nMLatestDeathCount == -1)
             {
-                earliestDeath = -1;
-            }
-            else if (nMSource.nMLatestDeathCount == -1)
-            {
-                earliestDeath = nMDestination.nMLatestDeathCount;
-            }
-            else if (nMDestination.nMLatestDeathCount == -1)
-            {
-                earliestDeath = nMSource.nMLatestDeathCount;
+                earliestDeath = Math.Max(nMSource.nMLatestDeathCount, nMDestination.nMLatestDeathCount);
             }
             else
             {
