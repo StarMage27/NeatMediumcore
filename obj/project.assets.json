@@ -2,12 +2,38 @@
   "version": 3,
   "targets": {
     "net8.0": {
+      "StructPacker/1.0.8": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard1.0/RudolfKurka.StructPackerTools.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/RudolfKurka.StructPackerTools.dll": {}
+        }
+      },
       "tModLoader.CodeAssist/0.1.5": {
         "type": "package"
       }
     }
   },
   "libraries": {
+    "StructPacker/1.0.8": {
+      "sha512": "bqsWcFZbqAl9mm54XmVWl0aNDhu3e0e3LG/sAno62XQdOo5/qKd2vu0KjGLUWeSfwyM0mr0QrsBMwjdS6owoUQ==",
+      "type": "package",
+      "path": "structpacker/1.0.8",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "analyzers/dotnet/cs/RudolfKurka.StructPacker.dll",
+        "lib/netstandard1.0/RudolfKurka.StructPackerTools.dll",
+        "ref/netstandard1.0/RudolfKurka.StructPackerTools.dll",
+        "structpacker.1.0.8.nupkg.sha512",
+        "structpacker.nuspec",
+        "tools/install.ps1",
+        "tools/uninstall.ps1"
+      ]
+    },
     "tModLoader.CodeAssist/0.1.5": {
       "sha512": "Sg/jKEg/z5eN+Cdi3/9CU4JfJwvXHVH+UDJf4Lipo26uTa+guLLJXH1XDJNPShTFwKK8jMUYbthINP4QhsgHSA==",
       "type": "package",
@@ -27,6 +53,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "StructPacker >= 1.0.8",
       "tModLoader.CodeAssist >= 0.1.*"
     ]
   },
@@ -67,6 +94,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "StructPacker": {
+            "target": "Package",
+            "version": "[1.0.8, )"
+          },
           "tModLoader.CodeAssist": {
             "target": "Package",
             "version": "[0.1.*, )"
@@ -88,7 +119,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/8.0.116/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/8.0.119/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

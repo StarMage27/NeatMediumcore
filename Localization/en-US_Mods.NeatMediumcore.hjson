@@ -12,6 +12,11 @@ Configs: {
 			Tooltip: Items dropped from player glow
 		}
 
+		DarkSoulsModeToggle: {
+			Label: Dark Souls mode
+			Tooltip: Only items from the latest death persist in the world, all others disappear
+		}
+
 		ShowDebugInfoInventoryToggle: {
 			Label: Show debug info in inventory
 			Tooltip: Shows debug info in item description

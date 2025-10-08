@@ -14,5 +14,6 @@
   </ItemGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgtModLoader_CodeAssist Condition=" '$(PkgtModLoader_CodeAssist)' == '' ">/home/starmage/.nuget/packages/tmodloader.codeassist/0.1.5</PkgtModLoader_CodeAssist>
+    <PkgStructPacker Condition=" '$(PkgStructPacker)' == '' ">/home/starmage/.nuget/packages/structpacker/1.0.8</PkgStructPacker>
   </PropertyGroup>
 </Project>
