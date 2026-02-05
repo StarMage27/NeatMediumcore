@@ -20,9 +20,10 @@ public class NMPlayer : ModPlayer
 
     public override void ProcessTriggers(TriggersSet triggersSet)
     {
-        if (NMBind.JustPressed && Main.LocalPlayer.difficulty.Equals(PlayerDifficultyID.MediumCore))
+        Player player = Main.LocalPlayer;
+        if (NMBind.JustPressed && player.isMediumcore() && player.TryGetModPlayer(out NMPlayer nMPlayer))
         {
-            Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems = !Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems;
+            nMPlayer.canPickUpAnotherPlayersItems = !nMPlayer.canPickUpAnotherPlayersItems;
         }
     }
 
@@ -30,12 +31,11 @@ public class NMPlayer : ModPlayer
 
     public override bool OnPickup(Item item)
     {
-        if (!Player.isMediumcore())
+        if (!Player.isMediumcore() || !item.TryGetGlobalItem(out NMGlobalItem nMItem))
         {
             return base.OnPickup(item);
         }
 
-        NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
         ref ItemData itemData = ref nMItem.itemData;
 
         if(itemData.ownerID != playerID
@@ -105,12 +105,11 @@ public class NMPlayer : ModPlayer
 
     private bool nMOnPickup(ref Item[] inventory, ref Item item)
     {
-        if (!Main.LocalPlayer.isMediumcore())
+        if (!Main.LocalPlayer.isMediumcore() || !item.TryGetGlobalItem(out NMGlobalItem nMItem))
         {
             return base.OnPickup(item);
         }
 
-        NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
         ref ItemData itemData = ref nMItem.itemData;
         
         if(itemData.ownerID != playerID)
@@ -129,8 +128,11 @@ public class NMPlayer : ModPlayer
             PopupText.NewText(PopupTextContext.RegularItemPickup, item, item.stack);
             return false;
         }
-            
-        NMGlobalItem inventoryNMItem = inventoryItem.GetGlobalItem<NMGlobalItem>();
+        
+        if (!inventoryItem.TryGetGlobalItem(out NMGlobalItem inventoryNMItem))
+        {
+            return base.OnPickup(item);
+        }
         ref ItemData invItemData = ref inventoryNMItem.itemData;
 
         if
@@ -143,12 +145,15 @@ public class NMPlayer : ModPlayer
             inventory[slotID].favorited = false;
 
             invItemData.invalidataOwnerId();
-            invItemData.invalidataDeathCount();
+            invItemData.invalidateDeathCount();
             invItemData.slotID = -1;
             invItemData.inventoryType = InventoryType.None;
-            //invItemData.Favourited = false;
 
-            Player.QuickSpawnItem(Player.GetSource_FromThis(), inventoryItem, inventoryItem.stack);
+            int spawnedItemID = Player.QuickSpawnItem(Player.GetSource_FromThis(), inventoryItem, inventoryItem.stack);
+            if (Main.item[spawnedItemID].TryGetGlobalItem(out NMGlobalItem nMSpawnedItem))
+            {
+                nMSpawnedItem.itemData = invItemData;
+            }
             inventory[slotID].TurnToAir();
 
             item.favorited = itemData.isFavorited();
@@ -188,7 +193,7 @@ public class NMPlayer : ModPlayer
                 ProcessItemsInInventory(ref Player.Loadouts[i].Dye, InventoryType.Dye, i);
             }
         }
-
+    
         ProcessItemsInInventory(ref Player.inventory, InventoryType.Inventory);
         ProcessItemsInInventory(ref Player.miscEquips, InventoryType.MiscEquips);
         ProcessItemsInInventory(ref Player.miscDyes, InventoryType.MiscDyes);
@@ -201,15 +206,17 @@ public class NMPlayer : ModPlayer
         for (short slotID = 0; slotID < inventory.Length; slotID++)
         {
             Item item = inventory[slotID];
-            if (item == null || item.IsAir) continue;
+            if (item == null || item.IsAir || !item.TryGetGlobalItem(out NMGlobalItem nMItem)) continue;
             
-            NMGlobalItem nMItem = item.GetGlobalItem<NMGlobalItem>();
-            ItemData itemData = nMItem.itemData;
+            ref ItemData itemData = ref nMItem.itemData;
             
-            if (!itemData.deathCountIsValid() || (itemData.inventoryType != inventoryType))
-            {
-                itemData.latestDeathCount = CountDeaths(Player);
-            }
+            // if (
+            //     !itemData.deathCountIsValid()
+            //     || (itemData.inventoryType != inventoryType)
+            // )
+            // {
+            // }
+            itemData.latestDeathCount = CountDeaths(Player);
 
             bool shouldBeFavorited = false;
             if (inventoryType.isInvOrInvFav() && item == Main.LocalPlayer.inventory[58]) // for the item in the mouse slot
@@ -221,7 +228,6 @@ public class NMPlayer : ModPlayer
             {
                 itemData.slotID = slotID;
                 shouldBeFavorited = item.favorited && inventoryType.isInvOrInvFav();
-                //nMItem.nMFavourited = item.favorited;
             }
             
             itemData.inventoryType = shouldBeFavorited ? InventoryType.InventoryFavorited : inventoryType;

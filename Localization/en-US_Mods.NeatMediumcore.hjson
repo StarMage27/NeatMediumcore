@@ -12,11 +12,6 @@ Configs: {
 			Tooltip: Items dropped from player glow
 		}
 
-		DarkSoulsModeToggle: {
-			Label: Dark Souls mode
-			Tooltip: Only items from the latest death persist in the world, all others disappear
-		}
-
 		ShowDebugInfoInventoryToggle: {
 			Label: Show debug info in inventory
 			Tooltip: Shows debug info in item description
@@ -25,6 +20,15 @@ Configs: {
 		ShowDebugInfoDroppedToggle: {
 			Label: Show debug info on dropped items
 			Tooltip: Shows debug info on dropped items
+		}
+	}
+
+	NMServerConfig: {
+		DisplayName: Neat Mediumcore Server Config
+
+		DarkSoulsModeToggle: {
+			Label: Dark Souls mode
+			Tooltip: Only items from your latest death persist in the world, all your items from previous deaths disappear if they weren't picked up
 		}
 	}
 }

@@ -10,9 +10,6 @@
         "runtime": {
           "lib/netstandard1.0/RudolfKurka.StructPackerTools.dll": {}
         }
-      },
-      "tModLoader.CodeAssist/0.1.5": {
-        "type": "package"
       }
     }
   },
@@ -33,28 +30,11 @@
         "tools/install.ps1",
         "tools/uninstall.ps1"
       ]
-    },
-    "tModLoader.CodeAssist/0.1.5": {
-      "sha512": "Sg/jKEg/z5eN+Cdi3/9CU4JfJwvXHVH+UDJf4Lipo26uTa+guLLJXH1XDJNPShTFwKK8jMUYbthINP4QhsgHSA==",
-      "type": "package",
-      "path": "tmodloader.codeassist/0.1.5",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "NugetIcon.png",
-        "analyzers/dotnet/cs/tModLoader.CodeAssist.dll",
-        "tmodloader.codeassist.0.1.5.nupkg.sha512",
-        "tmodloader.codeassist.nuspec",
-        "tools/install.ps1",
-        "tools/uninstall.ps1"
-      ]
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "StructPacker >= 1.0.8",
-      "tModLoader.CodeAssist >= 0.1.*"
+      "StructPacker >= 1.0.8"
     ]
   },
   "packageFolders": {
@@ -76,6 +56,7 @@
         "net8.0"
       ],
       "sources": {
+        "/usr/lib64/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -88,7 +69,13 @@
         "warnAsError": [
           "NU1605"
         ]
-      }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -97,10 +84,6 @@
           "StructPacker": {
             "target": "Package",
             "version": "[1.0.8, )"
-          },
-          "tModLoader.CodeAssist": {
-            "target": "Package",
-            "version": "[0.1.*, )"
           }
         },
         "imports": [
@@ -119,7 +102,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/8.0.119/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/10.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

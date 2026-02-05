@@ -22,10 +22,41 @@ public static class InventoryTypeExtensions
         }
         return false;
     }
+
+    public static string toString(this InventoryType type)
+    {
+        switch (type)
+        {
+            case(InventoryType.None):
+                return "None";
+            case(InventoryType.Inventory):
+                return "Inventory";
+            case(InventoryType.InventoryFavorited):
+                return "InventoryFavourited";
+            case(InventoryType.Armor):
+                return "Armor";
+            case(InventoryType.MiscEquips):
+                return "MiscEquips";
+            case(InventoryType.Dye):
+                return "Dye";
+            case(InventoryType.MiscDyes):
+                return "MiscDyes";
+            case(InventoryType.WingSlot):
+                return "WingSlot";
+            case(InventoryType.ShoeSlot):
+                return "ShoeSlot";
+            case(InventoryType.MoreAccessories):
+                return "MoreAccessories";
+            case(InventoryType.PotionSlots):
+                return "PotionSlots";
+            default:
+                return "what?";
+        }
+    }
     
     public static bool almostEquals(this InventoryType firstType, InventoryType secondType) =>
         firstType == secondType || (firstType.isInvOrInvFav() && secondType.isInvOrInvFav());
-    
+
     public static bool isNone(this InventoryType type) => type == InventoryType.None;
     public static bool isInventory(this InventoryType type) => type == InventoryType.Inventory;
     public static bool isInventoryFavorited(this InventoryType type) => type == InventoryType.InventoryFavorited;
