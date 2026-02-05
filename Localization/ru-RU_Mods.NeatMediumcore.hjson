@@ -22,6 +22,15 @@ Configs: {
 			Tooltip: Показывает отладочную информацию на выпавших в мире предметах
 		}
 	}
+
+	NMServerConfig: {
+		// DisplayName: Neat Mediumcore Server Config
+
+		DarkSoulsModeToggle: {
+			Label: Режим дарк соулса
+			Tooltip: В мире сохраняются только предметы с вашей последней смерти. Предметы с ваших предыдущих смертей исчезают, если они не были подобраны.
+		}
+	}
 }
 
 "Keybinds.Pick up other players items toggle.DisplayName": Переключить поддбирание чужих предметов

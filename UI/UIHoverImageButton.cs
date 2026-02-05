@@ -4,87 +4,57 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.GameContent.UI.Elements;
 using ReLogic.Content;
-using System.IO;
 
-namespace NeatMediumcore.UI
+namespace NeatMediumcore.UI;
+
+internal class UIHoverImageButton(Asset<Texture2D> texture, string hoverText, string nPath) : UIImageButton(texture)
 {
-    internal class UIHoverImageButton : UIImageButton
+    private string HoverText = hoverText;
+    private bool mouseover = false;
+    private bool mousedown = false;
+    private bool canPickUpAnotherPlayersItems = false;
+
+    protected override void DrawSelf(SpriteBatch spriteBatch)
     {
-        internal string HoverText;
-        internal bool mouseover = false;
-        internal bool mousedown = false;
-        internal string path;
-        bool canPickUpAnotherPlayersItems = false;
+        var texture = ModContent.Request<Texture2D>(nPath + "Single");
+        var textureMO = ModContent.Request<Texture2D>(nPath + "SingleMouseOver");
+        var textureA = ModContent.Request<Texture2D>(nPath + "All");
+        var textureMOA = ModContent.Request<Texture2D>(nPath + "AllMouseOver");
 
-        public UIHoverImageButton(Asset<Texture2D> texture, string hoverText, string nPath) : base(texture)
-        {
-            HoverText = hoverText;
-            path = nPath;
-        }
+        base.DrawSelf(spriteBatch);
 
-        protected override void DrawSelf(SpriteBatch spriteBatch)
-        {
-            var texture = ModContent.Request<Texture2D>(path + "Single");
-            var textureMO = ModContent.Request<Texture2D>(path + "SingleMouseOver");
-            var textureA = ModContent.Request<Texture2D>(path + "All");
-            var textureMOA = ModContent.Request<Texture2D>(path + "AllMouseOver");
+        SetVisibility(1, 1);
 
-            base.DrawSelf(spriteBatch);
-
-            SetVisibility(1, 1);
-
-            canPickUpAnotherPlayersItems = Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems;
+        canPickUpAnotherPlayersItems = Main.LocalPlayer.GetModPlayer<NMPlayer>().canPickUpAnotherPlayersItems;
             
-            if (canPickUpAnotherPlayersItems)
-            {
-                HoverText = "Can Pick Up Other Players Items";
-            }
-            else
-            {
-                HoverText = "Can't Pick Up Other Players Items";
-            }
+        HoverText = canPickUpAnotherPlayersItems ? "Can Pick Up Other Players Items" : "Can't Pick Up Other Players Items";
 
 
-            if (mouseover == true)
-            {
-                Main.hoverItemName = HoverText;
-                Main.LocalPlayer.mouseInterface = true;
-
-                if (canPickUpAnotherPlayersItems)
-                {
-                    SetImage(textureMOA);
-                }
-                else
-                {
-                    SetImage(textureMO);
-                }
-            }
-            else
-            {
-                if (canPickUpAnotherPlayersItems)
-                {
-                    SetImage(textureA);
-                }
-                else
-                {
-                    SetImage(texture);
-                }
-            }
-        }
-        public override void MouseOver(UIMouseEvent evt) => mouseover = true;
-
-        public override void MouseOut(UIMouseEvent evt) => mouseover = false;
-
-        public override void LeftMouseDown(UIMouseEvent evt)
+        if (mouseover)
         {
-            base.LeftMouseDown(evt);
-            mousedown = true;
-        }
+            Main.hoverItemName = HoverText;
+            Main.LocalPlayer.mouseInterface = true;
 
-        public override void LeftMouseUp(UIMouseEvent evt)
-        {
-            base.MiddleMouseUp(evt);
-            mousedown = false;
+            SetImage(canPickUpAnotherPlayersItems ? textureMOA : textureMO);
         }
+        else
+        {
+            SetImage(canPickUpAnotherPlayersItems ? textureA : texture);
+        }
+    }
+    public override void MouseOver(UIMouseEvent evt) => mouseover = true;
+
+    public override void MouseOut(UIMouseEvent evt) => mouseover = false;
+
+    public override void LeftMouseDown(UIMouseEvent evt)
+    {
+        base.LeftMouseDown(evt);
+        mousedown = true;
+    }
+
+    public override void LeftMouseUp(UIMouseEvent evt)
+    {
+        base.MiddleMouseUp(evt);
+        mousedown = false;
     }
 }

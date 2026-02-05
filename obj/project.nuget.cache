@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "wYiJK1XeU4A=",
+  "dgSpecHash": "Rptu1LDgRgA=",
   "success": true,
-  "projectFilePath": "/home/starmage/Local/share/Terraria/tModLoader/ModSources/NeatMediumcore/NeatMediumcore.csproj",
+  "projectFilePath": "/home/starmage/.local/share/Terraria/tModLoader/ModSources/NeatMediumcore/NeatMediumcore.csproj",
   "expectedPackageFiles": [
-    "/home/starmage/.nuget/packages/tmodloader.codeassist/0.1.5/tmodloader.codeassist.0.1.5.nupkg.sha512"
+    "/home/starmage/.nuget/packages/structpacker/1.0.8/structpacker.1.0.8.nupkg.sha512"
   ],
   "logs": []
 }

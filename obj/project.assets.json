@@ -2,24 +2,31 @@
   "version": 3,
   "targets": {
     "net8.0": {
-      "tModLoader.CodeAssist/0.1.5": {
-        "type": "package"
+      "StructPacker/1.0.8": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard1.0/RudolfKurka.StructPackerTools.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/RudolfKurka.StructPackerTools.dll": {}
+        }
       }
     }
   },
   "libraries": {
-    "tModLoader.CodeAssist/0.1.5": {
-      "sha512": "Sg/jKEg/z5eN+Cdi3/9CU4JfJwvXHVH+UDJf4Lipo26uTa+guLLJXH1XDJNPShTFwKK8jMUYbthINP4QhsgHSA==",
+    "StructPacker/1.0.8": {
+      "sha512": "bqsWcFZbqAl9mm54XmVWl0aNDhu3e0e3LG/sAno62XQdOo5/qKd2vu0KjGLUWeSfwyM0mr0QrsBMwjdS6owoUQ==",
       "type": "package",
-      "path": "tmodloader.codeassist/0.1.5",
+      "path": "structpacker/1.0.8",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "NugetIcon.png",
-        "analyzers/dotnet/cs/tModLoader.CodeAssist.dll",
-        "tmodloader.codeassist.0.1.5.nupkg.sha512",
-        "tmodloader.codeassist.nuspec",
+        "analyzers/dotnet/cs/RudolfKurka.StructPacker.dll",
+        "lib/netstandard1.0/RudolfKurka.StructPackerTools.dll",
+        "ref/netstandard1.0/RudolfKurka.StructPackerTools.dll",
+        "structpacker.1.0.8.nupkg.sha512",
+        "structpacker.nuspec",
         "tools/install.ps1",
         "tools/uninstall.ps1"
       ]
@@ -27,7 +34,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "tModLoader.CodeAssist >= 0.1.*"
+      "StructPacker >= 1.0.8"
     ]
   },
   "packageFolders": {
@@ -49,6 +56,7 @@
         "net8.0"
       ],
       "sources": {
+        "/usr/lib64/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -61,15 +69,21 @@
         "warnAsError": [
           "NU1605"
         ]
-      }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
-          "tModLoader.CodeAssist": {
+          "StructPacker": {
             "target": "Package",
-            "version": "[0.1.*, )"
+            "version": "[1.0.8, )"
           }
         },
         "imports": [
@@ -88,7 +102,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/8.0.116/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/10.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

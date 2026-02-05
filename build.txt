@@ -1,5 +1,5 @@
 displayName = Neat Mediumcore
 author = StarMage27
-version = 1.10
+version = 1.11
 weakReferences = MagicStorage
 buildIgnore = .gitignore, *.sln, *.csproj, *.ase, *.kra, *.gif, *.user, obj\*, bin\*, .vs\*, Properties\*, .git\*

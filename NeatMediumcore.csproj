@@ -26,5 +26,8 @@
        <HintPath>../../ModReader/MagicStorage/MagicStorage.dll</HintPath>
      </Reference>
     </ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="StructPacker" Version="1.0.8" />
+	</ItemGroup>
 
 </Project>

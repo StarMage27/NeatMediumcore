@@ -13,10 +13,19 @@ namespace NeatMediumcore.Config
         [DefaultValue(false)]
 		public bool ItemsGlowToggle;
 
+		
         [DefaultValue(false)]
 		public bool ShowDebugInfoInventoryToggle;
 
         [DefaultValue(false)]
 		public bool ShowDebugInfoDroppedToggle;
     }
+
+	public class NMServerConfig : ModConfig
+	{
+		public override ConfigScope Mode => ConfigScope.ServerSide;
+		
+		[DefaultValue(false)]
+		public bool DarkSoulsModeToggle;
+	}
 }

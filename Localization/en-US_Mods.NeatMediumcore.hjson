@@ -22,6 +22,15 @@ Configs: {
 			Tooltip: Shows debug info on dropped items
 		}
 	}
+
+	NMServerConfig: {
+		DisplayName: Neat Mediumcore Server Config
+
+		DarkSoulsModeToggle: {
+			Label: Dark Souls mode
+			Tooltip: Only items from your latest death persist in the world, all your items from previous deaths disappear if they weren't picked up
+		}
+	}
 }
 
 "Keybinds.Pick up other players items toggle.DisplayName": Pick up other players items toggle
