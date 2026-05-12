@@ -1,6 +1,6 @@
 Configs: {
 	NMConfig: {
-		DisplayName: Neat Mediumcore Config
+		DisplayName: Neat Mediumcore Player Config
 
 		ShowButtonsToggle: {
 			Label: Show multiplayer button
@@ -24,7 +24,7 @@ Configs: {
 	}
 
 	NMServerConfig: {
-		DisplayName: Neat Mediumcore Server Config
+		DisplayName: Neat Mediumcore World Config
 
 		DarkSoulsModeToggle: {
 			Label: Dark Souls mode

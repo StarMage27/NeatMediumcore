@@ -317,7 +317,11 @@ public class NMGlobalItem : GlobalItem
         if (!item.TryGetGlobalItem(out NMGlobalItem nMItem)) { return; }
 
         int length = reader.ReadInt32();
-        nMItem.itemData = reader.ReadBytes(length).deserializeToItemData();
+        ItemData? itemData = reader.ReadBytes(length).deserializeToItemData();
+        if (itemData != null)
+        {
+            nMItem.itemData = (ItemData)itemData;
+        }
     }
 
     #endregion
@@ -335,8 +339,11 @@ public class NMGlobalItem : GlobalItem
     {
         base.LoadData(item, tag);
         if (!tag.ContainsKey("NMCData") || !item.TryGetGlobalItem(out NMGlobalItem nMItem)) { return; }
-
-        nMItem.itemData = tag.GetByteArray("NMCData").deserializeToItemData();
+        ItemData? itemData = tag.GetByteArray("NMCData").deserializeToItemData();
+        if (itemData != null)
+        {
+            nMItem.itemData = (ItemData)itemData;
+        }
     }
 
     #endregion

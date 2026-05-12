@@ -52,13 +52,21 @@ public static class ItemDataExtensions
         return data;
     }
 
-    public static ItemData deserializeToItemData(this byte[] data)
+    public static ItemData? deserializeToItemData(this byte[] data)
     {
         int objsize = Marshal.SizeOf(typeof(ItemData));
         IntPtr buff = Marshal.AllocHGlobal(objsize);
-        Marshal.Copy(data, 0, buff, objsize);
-        ItemData itemData = (ItemData)Marshal.PtrToStructure(buff, typeof(ItemData));
-        Marshal.FreeHGlobal(buff);
-        return itemData;
+        try
+        {
+            Marshal.Copy(data, 0, buff, objsize);
+            ItemData itemData = (ItemData)Marshal.PtrToStructure(buff, typeof(ItemData));
+            Marshal.FreeHGlobal(buff);
+            return itemData;
+        }
+        catch (Exception)
+        {
+            Marshal.FreeHGlobal(buff);
+            return null;
+        }
     }
 }

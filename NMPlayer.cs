@@ -280,7 +280,6 @@ public class NMPlayer : ModPlayer
     public override void SyncPlayer(int toWho, int fromWho, bool newPlayer) {
         ModPacket packet = Mod.GetPacket();
         packet.Write((byte)Player.whoAmI);
-        
         packet.Write((byte)(canPickUpAnotherPlayersItems ? 1 : 0));
         packet.Write(playerID);
         

@@ -1,6 +1,6 @@
 Configs: {
 	NMConfig: {
-		DisplayName: Neat Mediumcore Config
+		DisplayName: Настройки удобной средней сложности для игрока
 
 		ShowButtonsToggle: {
 			Label: Показывать многопользовательскую кнопку
@@ -24,7 +24,7 @@ Configs: {
 	}
 
 	NMServerConfig: {
-		// DisplayName: Neat Mediumcore Server Config
+		DisplayName: Настройки удобной средней сложности для мира
 
 		DarkSoulsModeToggle: {
 			Label: Режим дарк соулса

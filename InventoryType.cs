@@ -25,33 +25,21 @@ public static class InventoryTypeExtensions
 
     public static string toString(this InventoryType type)
     {
-        switch (type)
+        return type switch
         {
-            case(InventoryType.None):
-                return "None";
-            case(InventoryType.Inventory):
-                return "Inventory";
-            case(InventoryType.InventoryFavorited):
-                return "InventoryFavourited";
-            case(InventoryType.Armor):
-                return "Armor";
-            case(InventoryType.MiscEquips):
-                return "MiscEquips";
-            case(InventoryType.Dye):
-                return "Dye";
-            case(InventoryType.MiscDyes):
-                return "MiscDyes";
-            case(InventoryType.WingSlot):
-                return "WingSlot";
-            case(InventoryType.ShoeSlot):
-                return "ShoeSlot";
-            case(InventoryType.MoreAccessories):
-                return "MoreAccessories";
-            case(InventoryType.PotionSlots):
-                return "PotionSlots";
-            default:
-                return "what?";
-        }
+            InventoryType.None => "None",
+            InventoryType.Inventory => "Inventory",
+            InventoryType.InventoryFavorited => "InventoryFavourited",
+            InventoryType.Armor => "Armor",
+            InventoryType.MiscEquips => "MiscEquips",
+            InventoryType.Dye => "Dye",
+            InventoryType.MiscDyes => "MiscDyes",
+            InventoryType.WingSlot => "WingSlot",
+            InventoryType.ShoeSlot => "ShoeSlot",
+            InventoryType.MoreAccessories => "MoreAccessories",
+            InventoryType.PotionSlots => "PotionSlots",
+            _ => "what?",
+        };
     }
     
     public static bool almostEquals(this InventoryType firstType, InventoryType secondType) =>
